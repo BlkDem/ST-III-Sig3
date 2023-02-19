@@ -3,16 +3,6 @@
 
 #include <avr/io.h>
 
-
-// 0 ������ �����
-// 1 ������
-// 2 �����
-// 3 ������ ������
-// 4 �����������
-// 5 ������� �����
-// 6 �������
-// 7 ������� ������
-
 #define WDP_mask 0b110
 
 #define _DIODE_2H_ON {PORTC &=B11001110; PORTC |=B00010000;} // 40\60
@@ -30,8 +20,7 @@
 #define SEG_2 PORTB &= B11111101 //2 seg
 #define SEG_3 PORTB &= B11111110 //4 seg
 #define SEG_4 PORTB &= B10111111 //1 seg
-#define SEG_OFF {PORTB |= B01001011; PORTD &= B00000011; PORTC &= B11110011;}// �������� ��� ��������
-
+#define SEG_OFF {PORTB |= B01001011; PORTD &= B00000011; PORTC &= B11110011;}
 #define L_A B11111000
 #define L_A_c B00001000
 #define L_u B00001000

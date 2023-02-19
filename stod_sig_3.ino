@@ -3,8 +3,6 @@
 #include <EEPROM.h>
 #include <avr/wdt.h> 
 
-// 78 46 0
-
 uint8_t VOLT_ID = 6;
 uint8_t DIAG_ID = 7;
 uint8_t BUTTONS_ID = 1;
@@ -13,19 +11,15 @@ int button_mode = 0;
 int button_up = 128;
 int button_down = 170;
 
-
-
 boolean TodMode = true;
-int LockMode = -1;
-
-  //инициализаця вотчдога
+int LockMode = -1; //lock mode
 uint16_t VoltCnt = 0;
 uint8_t vCnt=0;
-//volatile unsigned int tcnt2;  
+
 byte store_mode = 0;
 byte v_cor = 100;
-//volatile boolean a = false;
 
+//segments control
 volatile unsigned char dispD[] =
 {
  0x00, //0
@@ -103,8 +97,6 @@ volatile byte sdv = 0;
 
 void mypwm()
 {
-  
- // индикатор
  sdv++;
  if (sdv>=4) sdv=0;
  SEG_OFF; 
@@ -125,7 +117,6 @@ void ShowAuto()
  dispC[1]=L_u_c;
  dispC[2]=L_t_c;
  dispC[3]=L_o_c;
-
 }
 
 void Show2H()
@@ -199,17 +190,8 @@ void Show4H()
  dispD[1]=L_4;
  dispC[0]=L_empty_c;
  dispC[1]=L_4_c;
-
- //if (BreakIgnore==1)
- {
-   dispD[2]=L_defis;
-   dispC[2]=L_defis_c;
- }
- /*else
- {
-   dispD[2]=L_defis_point;
-   dispC[2]=L_defis_point_c;
- } */
+ dispD[2]=L_defis;
+ dispC[2]=L_defis_c;
  dispD[3]=L_H;
  dispC[3]=L_H_c;
 }
@@ -258,7 +240,7 @@ void ShowValue(int value)
  }
  
  tval = abs(value);
- i=tval/100;		   //Выведение напряжения на ЖКИ
+ i=tval/100;		   //Display voltage
  tval=tval%100;
  if (i==0) {dispD[1]=L_empty; dispC[1]=L_empty_c;} else {dispD[1]=nums[i]; dispC[1]=numsC[i];};
  i=tval/10;
@@ -271,17 +253,13 @@ void ShowValue(int value)
 
 void volt()
 {
-  
-//  long voltage = analogRead(1)/4/1000;
   int voltage = analogRead(VOLT_ID)/4 + 9 + (v_cor-100);
   ShowValue(voltage);
-  //data_array[volt_pos] = voltage;
- 
 }
 
 void reboot()
 {
-  delay(2001);
+  delay(2001); //wdt = 2000ms
 }
 
 void PresetSummerMode()
@@ -436,12 +414,12 @@ void PresetVoltCorrection()
 
 void setup()
 {
+  //init MCU
   DDRB = B01111111;
   PORTB = B01011011;  
   DDRD |= B11111100;
   PORTD |= B11111100;
   DDRC |= B00111101;
-
 
   MsTimer2::set(1, mypwm);
   MsTimer2::start();
@@ -460,8 +438,7 @@ void setup()
     DIODE_ALL_OFF;
   }
   wdt_enable(WDTO_2S);
-  
-  
+    
   ShowAuto();
   _4H_OFF;
   
@@ -480,8 +457,6 @@ void setup()
     PrintLockMode();            
   }  
 }
-
-
 
 void PrintLockMode()
 {
@@ -564,7 +539,6 @@ void _Down()
     }
   }  
 }
-
 
 // 0
 void _Mode()
